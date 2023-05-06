@@ -3,6 +3,8 @@ Mi johnny decimal plus
 
 Requirements
 pip install yamldirs
+yq, not the python version
+zenity
 
 Carpetas de alto nivel basadas en PARA.
 Dentro de proyectos, 11 es laboral.
