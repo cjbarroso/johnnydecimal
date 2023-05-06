@@ -1,5 +1,9 @@
 Mi johnny decimal plus
 
+
+Requirements
+pip install yamldirs
+
 Carpetas de alto nivel basadas en PARA.
 Dentro de proyectos, 11 es laboral.
 Dentro de cada proyecto hay otro PARA exclusivo para proyectos. Es global, para cualquier proyecto personal o laboral. A lo sumo los personales no contendran algunas cosas pero los numeros son fijos.
@@ -38,3 +42,10 @@ Acciones que quiero hacer con numeros:
   jdln ARCHIVO MM.DD
 4. Abrir con `open` un campo arbitrario de un archivo info.yaml de un JD particular
   jdopen MM.DD CAMPO
+
+
+## jcd
+Salta a una carpeta definida por un numero.
+Requiere al menos dos numeros.
+
+Con mas de dos numeros tiene una implementacion especial.
