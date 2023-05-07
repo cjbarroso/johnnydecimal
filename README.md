@@ -24,3 +24,6 @@ The script is very simple but requires some fixed structure:
 - Adjust variables on top of `jdlibrary.sh` if not using the defaults.
 - There is no step 4.
 
+### How to create your JD hierarchy
+
+Copy the example .yamls from the `cjnumeric` folder to the folder that will contain your system (I use ~/JD) and edit as desider. Then execute `yamldirs <filename.yaml>` and watch your complete hierarchy being created.
