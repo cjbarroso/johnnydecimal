@@ -1,12 +1,18 @@
 #!/usr/bin/env bash
-# First argument is the operation
-# Remaining are arguments for the selected operation
+# USAGE:
+
+function usage() {
+    echo "Usage: $0 <operation> {<AA.CC>|<AA.CC.AA.CC>} <object>"
+}
+
+# Allowed operations:
+allowed_ops=("cp" "mv" "ln" "ls" "rm" "ls" "open" "addurl" "init" "editinfo" )
+
 
 BASE=~/JD
 COMMAND=open
-set -e
 
-allowed_ops=("cp" "mv" "ln" "ls" "rm" "ls" "open" "addurl" "init" "editinfo" )
+set -e
 
 function errcho(){ >&2 echo ERROR: $@; }
 # takes a JD number and returns a path to the base directory
@@ -60,7 +66,7 @@ function getjdfield() {
     URL=$(cat "$1" | yq -N -r ".${FIELD} // \"\" ")
     if [[ -z $URL ]]; then
         errcho "URL not found"
-        exit 1
+        exit 1aa
     fi
     echo $URL
 }
