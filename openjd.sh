@@ -6,19 +6,37 @@ BASE=~/JD
 COMMAND=open
 set -e
 
-allowed_ops=("cp" "mv" "ln" "ls" "rm" "ls" "open" "addurl" )
+allowed_ops=("cp" "mv" "ln" "ls" "rm" "ls" "open" "addurl" "init" "editinfo" )
 
 function errcho(){ >&2 echo ERROR: $@; }
 # takes a JD number and returns a path to the base directory
 
 function getjddir() {
-    #errcho $*
-    TGT_DIR=$(find $BASE -type d -name "$1*"|head -n1)
+    # get first JD id
+    JDID1=$(echo $1 | awk -F'.' 'END {print $1"."$2}')
+    
+    TGT_DIR=$(find $BASE -type d -name "$JDID1*"|head -n1)
+    
     if [[ -z $TGT_DIR ]]; then
         errcho "Directory not found"
         exit 1
     fi
-    echo $TGT_DIR
+    # There is another JDID in the input?
+    JDID2=$(echo $1 | awk -F'.' 'END {print $3"."$4}')
+    if [[ $JDID2 == "." ]]; then
+        echo $TGT_DIR
+        return
+    fi
+    # if continue I use $TGT_DIR as base to find the new subnumber
+    TGT_SUBDIR=$(find "$TGT_DIR" -type d -name "$JDID2*"|head -n1)
+    
+    if [[ -z $TGT_SUBDIR ]]; then
+        errcho "Subirectory not found"
+        exit 1
+    fi
+    # If I reach this point the directory exist
+
+    echo $TGT_SUBDIR
 }
 
 # Gets a directory, returns full path to info file
@@ -48,7 +66,7 @@ function getjdfield() {
 }
 
 function usage() {
-    echo "Usage: $0 {operation} {AA.CC} {Object}"
+    echo "Usage: $0 <operation> {<AA.CC>|<AA.CC.AA.CC>} <object>"
 }
 
 function check_arguments() {
@@ -69,21 +87,33 @@ function check_arguments() {
         return 1
     fi
 
-    readarray -d . -t strarr <<< "$2" 
-    
-    if [[ ${#strarr[@]}  < 2 || ${#strarr[1]} < 2  ]]; then
-        errcho "Unary operator for JD ID not supported (yet)"
+    readarray -d . -t strarr <<< "$2"
+
+    # Only lenghts 2 or 4
+    # also, each number is exactly 2 digits
+    if [[ ${#strarr[@]}  = 2 ]]; then
+        if [[ ${#strarr[0]} != 2 || ${#strarr[1]} != 3 ]]; then
+        errcho "invalid lenght of digits"
         usage
         return 1
+        fi
+    elif [[ ${#strarr[@]}  = 4 ]]; then
+    
+        if [[ ${#strarr[0]} != 2 || ${#strarr[1]} != 2 || ${#strarr[2]} != 2 || ${#strarr[3]} != 3 ]]; then
+        errcho "invalid lenght of digits"
+        usage
+        return 1
+        fi
+    else
+        errcho "Invalid JD digits"
+        usage
     fi
-
 
     if [[ ! " ${allowed_ops[*]} " =~ " ${1} " ]]; then
         echo Operation $1 not allowed
         usage
         return 1
     fi
-
 }
 
 # We require at least 2 arguments
@@ -91,6 +121,7 @@ check_arguments $* || exit 2
 
 # check if the directory exists
 TGT=$(getjddir "$2") || exit 3
+
 
    # - First argument: Operation
     # - Second argument: JD number
@@ -117,14 +148,21 @@ case $1 in
     INFOFILE=$(getjdinfofile "$TGT") || exit 4
     FIELD=$3
     URL=$(getjdfield "$INFOFILE" url) || exit 5
-    $COMMAND $URL
+    $COMMAND "$URL"
     ;;
   addurl)
+    touch "$TGT/info.yaml"
     INFOFILE=$(getjdinfofile "$TGT") || exit 4
-    touch "$INFOFILE"
     yq -i e ".url |= \"$3\" " "$INFOFILE"
   ;;
-
+  init)
+  touch "$TGT/info.yaml"
+  yq -i e ".url |= \"$TGT\" " "$TGT/info.yaml"
+  ;;
+  editinfo)
+  touch "$TGT/info.yaml"
+  open "$TGT/info.yaml"
+  ;;
 esac
 
 
