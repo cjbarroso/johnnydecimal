@@ -3,6 +3,16 @@
 
 function usage() {
     echo "Usage: $0 <operation> {<AA.CC>|<AA.CC.AA.CC>} <object>"
+    echo "Command list"
+    echo "cp <NUMBER> <file> : Copies <file> to <NUMBER>"
+    echo "mv <NUMBER> <file>"
+    echo "ln <NUMBER> <file>"
+    echo "ls <NUMBER>"
+    echo "rm <NUMBER> <file>"
+    echo "open <NUMBER> <file> : Open the default url from info.yaml in said NUMBER"
+    echo "addurl <NUMBER> : Creates/replaces URL on info.yaml at NUMBER"
+    echo "init <NUMBER> : Creates an info.yaml at NUMBER, action by default is open the folder"
+    echo "editinfo <NUMBER> : Triggers default action to edit info.yaml at NUMBER"
 }
 
 # Allowed operations:
@@ -71,10 +81,6 @@ function getjdfield() {
         exit 1aa
     fi
     echo $URL
-}
-
-function usage() {
-    echo "Usage: $0 <operation> {<AA.CC>|<AA.CC.AA.CC>} <object>"
 }
 
 function getdw() {
