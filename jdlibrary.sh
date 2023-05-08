@@ -6,11 +6,13 @@ function usage() {
 }
 
 # Allowed operations:
-allowed_ops=("cp" "mv" "ln" "ls" "rm" "ls" "open" "addurl" "init" "editinfo" )
+allowed_ops=("cp" "mv" "ln" "ls" "rm" "ls" "open" "addurl" "init" "editinfo" "getdw" )
 
 
 BASE=~/JD
 COMMAND=open
+# Downloads folder, to get files from
+DOWNLOADS=~/Downloads
 
 set -e
 
@@ -73,6 +75,12 @@ function getjdfield() {
 
 function usage() {
     echo "Usage: $0 <operation> {<AA.CC>|<AA.CC.AA.CC>} <object>"
+}
+
+function getdw() {
+# Copy the last downloaded file from the downloads folder to the specified JD ID
+RECENTER=$(find $DOWNLOADS -maxdepth 1 -type f -exec stat -c '%X %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
+echo $RECENTER
 }
 
 function check_arguments() {
@@ -168,5 +176,9 @@ case $1 in
   editinfo)
   touch "$TGT/info.yaml"
   open "$TGT/info.yaml"
+  ;;
+  getdw)
+  LAST=$(getdw)
+  cp -v "$LAST" "$TGT"
   ;;
 esac
