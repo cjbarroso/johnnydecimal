@@ -185,6 +185,16 @@ case $1 in
   ;;
   getdw)
   LAST=$(getdw)
+  echo "Last downloaded file:"
+  echo "\t" $LAST
+  read -n1 -p "Copy it to $TGT  (y/n)? " RESP
+  echo ""
+  if [[ $RESP == "y" ]]; then
+  echo ""
   cp -v "$LAST" "$TGT"
+  else
+  echo "Cancelled"
+  fi
+  
   ;;
 esac
