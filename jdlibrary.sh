@@ -14,14 +14,16 @@ function usage() {
     echo "init <NUMBER> : Creates an info.yaml at NUMBER, action by default is open the folder"
     echo "editinfo <NUMBER> : Triggers default action to edit info.yaml at NUMBER"
     echo "browse <NUMBER> : Opens a rofi browser with fuzzy search for files in dir"
+    echo "code <NUMBER> : Opens directory in vscode"
 }
 
 # Allowed operations:
-allowed_ops=("cp" "mv" "ln" "ls" "rm" "ls" "open" "addurl" "init" "editinfo" "getdw" "browse" )
+allowed_ops=("cp" "mv" "ln" "ls" "rm" "ls" "open" "addurl" "init" "editinfo" "getdw" "browse" "code" )
 
 
 BASE=~/JD
 COMMAND=xdg-open
+VSCODE=code
 # Downloads folder, to get files from
 DOWNLOADS=~/Downloads
 set -e
@@ -90,10 +92,13 @@ RECENTER=$(find $DOWNLOADS -maxdepth 1 -type f -exec stat -c '%X %n' {} \; | sor
 echo $RECENTER
 }
 
-function browse() {
-   echo $COMMAND "$TGT" 
+function browsefn() { 
    $COMMAND "$TGT"
+}
 
+function codefn() {
+# opens a folder in vscode
+$VSCODE "$TGT"
 }
 
 function check_arguments() {
@@ -203,8 +208,12 @@ case $1 in
   echo "Cancelled"
   fi
   ;;
-  browse)
-  browse
-
+  code)
+  codefn
   ;;
+  browse)
+  browsefn
+  ;;
+  
+
 esac
