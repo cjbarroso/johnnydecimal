@@ -13,17 +13,17 @@ function usage() {
     echo "addurl <NUMBER> : Creates/replaces URL on info.yaml at NUMBER"
     echo "init <NUMBER> : Creates an info.yaml at NUMBER, action by default is open the folder"
     echo "editinfo <NUMBER> : Triggers default action to edit info.yaml at NUMBER"
+    echo "browse <NUMBER> : Opens a rofi browser with fuzzy search for files in dir"
 }
 
 # Allowed operations:
-allowed_ops=("cp" "mv" "ln" "ls" "rm" "ls" "open" "addurl" "init" "editinfo" "getdw" )
+allowed_ops=("cp" "mv" "ln" "ls" "rm" "ls" "open" "addurl" "init" "editinfo" "getdw" "browse" )
 
 
 BASE=~/JD
-COMMAND=open
+COMMAND=xdg-open
 # Downloads folder, to get files from
 DOWNLOADS=~/Downloads
-
 set -e
 
 function errcho(){ >&2 echo ERROR: $@; }
@@ -46,7 +46,8 @@ function getjddir() {
         return
     fi
     # if continue I use $TGT_DIR as base to find the new subnumber
-    TGT_SUBDIR=$(find "$TGT_DIR" -type d -name "$JDID2*"|head -n1)
+    # mindepth required for the corner case where the two JDID are equal, i.e "11.01.11.01"
+    TGT_SUBDIR=$(find "$TGT_DIR" -mindepth 1 -type d -name "$JDID2*"|head -n1)
     
     if [[ -z $TGT_SUBDIR ]]; then
         errcho "Subirectory not found"
@@ -87,6 +88,12 @@ function getdw() {
 # Copy the last downloaded file from the downloads folder to the specified JD ID
 RECENTER=$(find $DOWNLOADS -maxdepth 1 -type f -exec stat -c '%X %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
 echo $RECENTER
+}
+
+function browse() {
+   echo $COMMAND "$TGT" 
+   $COMMAND "$TGT"
+
 }
 
 function check_arguments() {
@@ -195,6 +202,9 @@ case $1 in
   else
   echo "Cancelled"
   fi
-  
+  ;;
+  browse)
+  browse
+
   ;;
 esac
