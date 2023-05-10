@@ -34,8 +34,8 @@ function errcho(){ >&2 echo ERROR: $@; }
 function getjddir() {
     # get first JD id
     JDID1=$(echo $1 | awk -F'.' 'END {print $1"."$2}')
-    
-    TGT_DIR=$(find $BASE -type d -name "$JDID1*"|head -n1)
+    # maxdepth required for not capturing deeper hierarchies
+    TGT_DIR=$(find $BASE -maxdepth 3 -type d -name "$JDID1*"|head -n1)
     
     if [[ -z $TGT_DIR ]]; then
         errcho "Directory not found"
