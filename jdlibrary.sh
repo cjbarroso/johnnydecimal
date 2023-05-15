@@ -23,9 +23,9 @@ allowed_ops=("cp" "mv" "ln" "ls" "rm" "ls" "open" "addurl" "init" "editinfo" "ge
 
 BASE=~/JD
 COMMAND=xdg-open
-VSCODE=code
 # Downloads folder, to get files from
-DOWNLOADS=~/Downloads
+DOWNLOADS=~/Descargas
+
 set -e
 
 function errcho(){ >&2 echo ERROR: $@; }
@@ -88,8 +88,8 @@ function getjdfield() {
 
 function getdw() {
 # Copy the last downloaded file from the downloads folder to the specified JD ID
-RECENTER=$(find $DOWNLOADS -maxdepth 1 -type f -exec stat -c '%X %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
-echo $RECENTER
+RECENTER=$(cd ~/Descargas && ls -t | head -n1)
+echo $DOWNLOADS/$RECENTER
 }
 
 function browsefn() { 
@@ -108,7 +108,7 @@ function check_arguments() {
     # - First argument: Operation
     # - Second argument: JD number
     # - Third argument: Object for the operation
-    # - Nth arguments: Depends on command
+    # - NtSTG-backups-FF-111.0.1h arguments: Depends on command
     # -d DELIMITER
     # -t TARGET variable
     # Dont forget the "" around input variable
