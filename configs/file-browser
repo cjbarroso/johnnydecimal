@@ -1,0 +1,5 @@
+oc-cmd "pcmanfm;name:Browse current directory"
+oc-cmd "code;name:VSCode open current directory"
+oc-cmd "/home/charlie/.local/bin/jncreate;name:Create JD numbered directory"
+oc-cmd "/home/charlie/.local/bin/jdcreatefile.sh;name:Create file here"
+cmd "mimeo"

@@ -1,0 +1,6 @@
+window {
+  height: 70%;
+  width: 90%;
+  location: center;
+  position: center;
+}
